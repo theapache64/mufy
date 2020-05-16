@@ -32,7 +32,6 @@ class MufyTest {
                 "-k",
                 "Hey"
             )
-        println(mufy.keyword.toList())
         exitCode.should.equal(MufyViewModel.RESULT_GIFS_GENERATED)
     }
 
@@ -47,7 +46,34 @@ class MufyTest {
                 "-k",
                 "Thank you"
             )
-        println(mufy.keyword.toList())
+        exitCode.should.equal(MufyViewModel.RESULT_GIFS_GENERATED)
+    }
+
+    @Test
+    fun `Generate gifs with large keyword`() {
+        val exitCode =
+            mufyCmd.execute(
+                "-i",
+                "/home/theapache64/Documents/projects/mufy/lab/movie.mp4",
+                "-n",
+                "20",
+                "-k",
+                "Every mischief, prank and dirty deed."
+            )
+        exitCode.should.equal(MufyViewModel.RESULT_FAILED_LARGE_KEYWORD)
+    }
+
+    @Test
+    fun `Generate gifs with medium keyword`() {
+        val exitCode =
+            mufyCmd.execute(
+                "-i",
+                "/home/theapache64/Documents/projects/mufy/lab/movie.mp4",
+                "-n",
+                "20",
+                "-k",
+                "Every mischief,"
+            )
         exitCode.should.equal(MufyViewModel.RESULT_GIFS_GENERATED)
     }
 }
