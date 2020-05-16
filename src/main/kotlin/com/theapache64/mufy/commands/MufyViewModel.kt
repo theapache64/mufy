@@ -20,7 +20,13 @@ class MufyViewModel @Inject constructor() : BaseViewModel<Mufy>() {
         const val RESULT_GIFS_GENERATED = 200
         const val RESULT_FAILED_TO_GENERATE_GIFS = 500
         const val NO_OF_GIF_MAXIMUM = -1
-        const val GIF_BUFFER = 1.5
+        const val START_GIF_BUFFER = 1.5
+        const val END_GIF_BUFFER = 0.2
+
+        /**
+         * A flag to debug
+         */
+        const val IS_NEED_MP4 = true
 
         val fontFile = File("assets/impact.ttf")
     }
@@ -35,7 +41,7 @@ class MufyViewModel @Inject constructor() : BaseViewModel<Mufy>() {
             if (keywordSubtitles.isNotEmpty()) {
 
                 for (ks in keywordSubtitles) {
-                    _printer.value = "Found ${ks.subTitles.size} instance(s) of '${ks.keyword}'"
+                    _printer.value = "Found ${ks.subTitles.size} gif(s) with keyword '${ks.keyword}'"
 
                     // Ordering by line length
                     val sortedSubtitles = sortAndSubList(ks, command)
@@ -66,16 +72,16 @@ class MufyViewModel @Inject constructor() : BaseViewModel<Mufy>() {
 
         val gifFilePaths = mutableListOf<String>()
         val gifDir = File("gifs/${keyword}_${inputFile.nameWithoutExtension}")
+        gifDir.deleteRecursively()
+        gifDir.mkdirs()
 
-        if (!gifDir.exists()) {
-            gifDir.mkdirs()
-        }
 
         for ((index, trimPos) in trimPositions.withIndex()) {
             val posIndex = index + 1
             println("Generating gif ${posIndex}/${trimPositions.size}...")
 
-            val gifFilePath = "${gifDir.absolutePath}/${posIndex}_${keyword}.gif"
+            val gifFilePathWithoutExt = "${gifDir.absolutePath}/${posIndex}_${keyword}"
+            val gifFilePath = "$gifFilePathWithoutExt.gif"
 
             val tempMp4File = File("${keyword}_${posIndex}_${trimPositions.size}_${System.currentTimeMillis()}.mp4")
             val command = """
@@ -91,6 +97,20 @@ class MufyViewModel @Inject constructor() : BaseViewModel<Mufy>() {
                 isSuppressError = true,
                 isReturnAll = true
             )
+
+            @Suppress("ConstantConditionIf")
+            if (IS_NEED_MP4) {
+
+                val mp4GenCommand =
+                    "ffmpeg -y -ss ${trimPos.fromInSeconds} -t ${trimPos.durationInSeconds} -i '${inputFile.absolutePath}' '${gifFilePathWithoutExt}.mp4'"
+                SimpleCommandExecutor.executeCommand(
+                    mp4GenCommand,
+                    isLivePrint = false,
+                    isSuppressError = true,
+                    isReturnAll = true
+                )
+            }
+
             gifFilePaths.add(gifFilePath)
         }
 
@@ -100,16 +120,27 @@ class MufyViewModel @Inject constructor() : BaseViewModel<Mufy>() {
     /**
      * To create an HTML index page for the given gif files
      */
-    private fun createHtmlFileFor(gifDir: File, gifFileNames: List<String>) {
+    private fun createHtmlFileFor(gifDir: File, gifFilePaths: List<String>) {
 
-        val imgSrcs = gifFileNames.map { gifFilePath ->
-            """<img src="$gifFilePath"/> </br> """
+        val imgSrcs = gifFilePaths.map { gifFilePath ->
+            val tempFile = File(gifFilePath)
+            @Suppress("ConstantConditionIf")
+            if (IS_NEED_MP4) {
+                return@map """
+                <a href="${tempFile.parent}/${tempFile.nameWithoutExtension}.mp4" target="_blank">
+                    <img src="$gifFilePath"/>
+                </a>
+                <img src=""/>
+            """.trimIndent()
+            } else {
+                """<img src="$gifFilePath"/> </br> """
+            }
         }
 
         val html = """
             <html>
             <body>
-                $imgSrcs
+                ${imgSrcs.joinToString("</br>\n")}
             </body>
             </html>
         """.trimIndent()
@@ -136,8 +167,8 @@ class MufyViewModel @Inject constructor() : BaseViewModel<Mufy>() {
             val seekMs = firstIndex * totalTimeNeededForKeywordInMs
 
             val stWithoutBuffer = subTitle.begin.toSeconds() + seekMs
-            val startTime = stWithoutBuffer - GIF_BUFFER
-            val endTime = stWithoutBuffer + totalTimeNeededForKeywordInMs
+            val startTime = stWithoutBuffer - START_GIF_BUFFER
+            val endTime = stWithoutBuffer + totalTimeNeededForKeywordInMs + END_GIF_BUFFER
             trimPositions.add(TrimPosition(startTime, endTime))
         }
 

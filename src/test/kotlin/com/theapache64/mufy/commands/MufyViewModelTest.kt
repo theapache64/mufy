@@ -1,7 +1,6 @@
 package com.theapache64.mufy.commands
 
 import com.theapache64.mufy.utils.srtparser.SrtParser
-import com.theapache64.mufy.utils.srtparser.Subtitle
 import com.theapache64.mufy.utils.srtparser.getResourceFile
 import com.winterbe.expekt.should
 import org.junit.Before
@@ -41,6 +40,6 @@ internal class MufyViewModelTest {
         }
         val trimPositions = mufyViewModel.getTrimPositions("what", subTitles)
         trimPositions.size.should.equal(1)
-        trimPositions[0].durationInSeconds.should.above(2.toDouble())
+        trimPositions[0].durationInSeconds.should.above(1.toDouble())
     }
 }

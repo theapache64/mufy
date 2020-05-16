@@ -20,17 +20,32 @@ class MufyTest {
     }
 
     @Test
-    fun `Generate gifs`() {
+    fun `Generate gifs with word`() {
         val exitCode =
             mufyCmd.execute(
                 "-i",
                 "/home/theapache64/Documents/projects/mufy/lab/movie.mp4",
                 "-n",
-                "10",
+                "20",
                 "-k",
                 "What",
                 "-k",
                 "Hey"
+            )
+        println(mufy.keyword.toList())
+        exitCode.should.equal(MufyViewModel.RESULT_GIFS_GENERATED)
+    }
+
+    @Test
+    fun `Generate gifs with 2 words`() {
+        val exitCode =
+            mufyCmd.execute(
+                "-i",
+                "/home/theapache64/Documents/projects/mufy/lab/movie.mp4",
+                "-n",
+                "20",
+                "-k",
+                "Thank you"
             )
         println(mufy.keyword.toList())
         exitCode.should.equal(MufyViewModel.RESULT_GIFS_GENERATED)
