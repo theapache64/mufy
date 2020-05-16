@@ -3,15 +3,20 @@ package com.theapache64.mufy.commands
 import com.theapache64.cyclone.core.base.BaseViewModel
 import com.theapache64.cyclone.core.livedata.LiveData
 import com.theapache64.cyclone.core.livedata.MutableLiveData
-import com.theapache64.mufy.models.KeywordSubtitles
-import com.theapache64.mufy.models.TrimPosition
-import com.theapache64.mufy.utils.SimpleCommandExecutor
-import com.theapache64.mufy.utils.srtparser.SrtParser
+import com.theapache64.mufy.core.GifGenerator
+import com.theapache64.mufy.core.HtmlGenerator
+import com.theapache64.mufy.core.SortFilterManager
+import com.theapache64.mufy.core.TrimManager
 import com.theapache64.mufy.utils.srtparser.Subtitle
 import java.io.File
 import javax.inject.Inject
 
-class MufyViewModel @Inject constructor() : BaseViewModel<Mufy>() {
+class MufyViewModel @Inject constructor(
+    private val gifGenerator: GifGenerator,
+    private val htmlGenerator: HtmlGenerator,
+    private val trimManager: TrimManager,
+    private val sortFilterManager: SortFilterManager
+) : BaseViewModel<Mufy>() {
 
     private val _printer = MutableLiveData<String>()
     val printer: LiveData<String> = _printer
@@ -35,18 +40,34 @@ class MufyViewModel @Inject constructor() : BaseViewModel<Mufy>() {
         val inputFile = command.input
         val subTitleFile = File("${inputFile.parent}/${inputFile.nameWithoutExtension}.srt")
         if (subTitleFile.exists()) {
+
             // all good
             _printer.value = "Subtitle found : ${subTitleFile.name}"
-            val keywordSubtitles = filterKeywordSubTitles(subTitleFile, command.keyword)
+            val keywordSubtitles = sortFilterManager.filterKeywordSubTitles(subTitleFile, command.keyword)
+
             if (keywordSubtitles.isNotEmpty()) {
 
                 for (ks in keywordSubtitles) {
                     _printer.value = "Found ${ks.subTitles.size} gif(s) with keyword '${ks.keyword}'"
 
                     // Ordering by line length
-                    val sortedSubtitles = sortAndSubList(ks, command)
-                    val trimPositions = getTrimPositions(ks.keyword, sortedSubtitles)
-                    createGifs(ks.keyword, inputFile, trimPositions)
+                    val sortedSubtitles = sortFilterManager.sortAndSubList(ks, command) {
+
+                        // High demand
+                        _printer.value =
+                            "Requested number of gifs '${command.numOfGifs}' is higher than available gifs '${ks.subTitles.size}'"
+                    }
+
+                    val trimPositions = trimManager.getTrimPositions(ks.keyword, sortedSubtitles)
+
+                    // Generating gifs
+                    gifGenerator.createGifs(
+                        ks.keyword,
+                        inputFile,
+                        trimPositions
+                    ) { gifDir: File, gifFilePaths: List<String> ->
+                        htmlGenerator.createHtmlFileFor(gifDir, gifFilePaths)
+                    }
                 }
 
                 return RESULT_GIFS_GENERATED
@@ -64,173 +85,5 @@ class MufyViewModel @Inject constructor() : BaseViewModel<Mufy>() {
         return RESULT_FAILED_TO_GENERATE_GIFS;
     }
 
-    /**
-     * To generate gifs for the given input file with given trim position.
-     * The directory will be named according to keyword and input file name.
-     */
-    private fun createGifs(keyword: String, inputFile: File, trimPositions: List<TrimPosition>) {
-
-        val gifFilePaths = mutableListOf<String>()
-        val gifDir = File("gifs/${keyword}_${inputFile.nameWithoutExtension}")
-        gifDir.deleteRecursively()
-        gifDir.mkdirs()
-
-
-        for ((index, trimPos) in trimPositions.withIndex()) {
-            val posIndex = index + 1
-            println("Generating gif ${posIndex}/${trimPositions.size}...")
-
-            val gifFilePathWithoutExt = "${gifDir.absolutePath}/${posIndex}_${keyword}"
-            val gifFilePath = "$gifFilePathWithoutExt.gif"
-
-            val tempMp4File = File("${keyword}_${posIndex}_${trimPositions.size}_${System.currentTimeMillis()}.mp4")
-            val command = """
-                ffmpeg -y -ss ${trimPos.fromInSeconds} -t ${trimPos.durationInSeconds} -i '${inputFile.absolutePath}' -vf \
-                "scale=512:-1,
-                drawtext=fontfile=${fontFile.absolutePath}:fontsize=50:fontcolor=white:x=(w-text_w)/2:y=(h-text_h-10):text='${keyword.toUpperCase()}':bordercolor=black:borderw=2" \
-                -c:v libx264 -an "${tempMp4File.absolutePath}" && ffmpeg -y -i "${tempMp4File.absolutePath}" -filter_complex "[0:v] fps=12,scale=480:-1,split [a][b];[a] palettegen [p];[b][p] paletteuse" "$gifFilePath" && rm "${tempMp4File.absolutePath}" 
-            """.trimIndent()
-
-            SimpleCommandExecutor.executeCommand(
-                command,
-                isLivePrint = false,
-                isSuppressError = true,
-                isReturnAll = true
-            )
-
-            @Suppress("ConstantConditionIf")
-            if (IS_NEED_MP4) {
-
-                val mp4GenCommand =
-                    "ffmpeg -y -ss ${trimPos.fromInSeconds} -t ${trimPos.durationInSeconds} -i '${inputFile.absolutePath}' '${gifFilePathWithoutExt}.mp4'"
-                SimpleCommandExecutor.executeCommand(
-                    mp4GenCommand,
-                    isLivePrint = false,
-                    isSuppressError = true,
-                    isReturnAll = true
-                )
-            }
-
-            gifFilePaths.add(gifFilePath)
-        }
-
-        createHtmlFileFor(gifDir, gifFilePaths)
-    }
-
-    /**
-     * To create an HTML index page for the given gif files
-     */
-    private fun createHtmlFileFor(gifDir: File, gifFilePaths: List<String>) {
-
-        val imgSrcs = gifFilePaths.map { gifFilePath ->
-            val tempFile = File(gifFilePath)
-            @Suppress("ConstantConditionIf")
-            if (IS_NEED_MP4) {
-                return@map """
-                <a href="${tempFile.parent}/${tempFile.nameWithoutExtension}.mp4" target="_blank">
-                    <img src="$gifFilePath"/>
-                </a>
-                <img src=""/>
-            """.trimIndent()
-            } else {
-                """<img src="$gifFilePath"/> </br> """
-            }
-        }
-
-        val html = """
-            <html>
-            <body>
-                ${imgSrcs.joinToString("</br>\n")}
-            </body>
-            </html>
-        """.trimIndent()
-
-        File("${gifDir.absolutePath}/index.html").writeText(html)
-    }
-
-    /**
-     * To get GIF trim positions from give subtitle and keyword
-     */
-    fun getTrimPositions(keyword: String, subTitles: List<Subtitle>): List<TrimPosition> {
-
-        val trimPositions = mutableListOf<TrimPosition>()
-
-        for (subTitle in subTitles) {
-
-            // Calculating trim position
-            val duration = subTitle.end.minus(subTitle.begin)
-            val durInSec = duration.toSeconds()
-            val charCount = subTitle.text.length
-            val timeForChar = durInSec / charCount
-            val totalTimeNeededForKeywordInMs = keyword.length * timeForChar
-            val firstIndex = subTitle.text.indexOf(keyword, 0, true)
-            val seekMs = firstIndex * totalTimeNeededForKeywordInMs
-
-            val stWithoutBuffer = subTitle.begin.toSeconds() + seekMs
-            val startTime = stWithoutBuffer - START_GIF_BUFFER
-            val endTime = stWithoutBuffer + totalTimeNeededForKeywordInMs + END_GIF_BUFFER
-            trimPositions.add(TrimPosition(startTime, endTime))
-        }
-
-        return trimPositions
-    }
-
-    /**
-     * To sort given subtitles in length order and sublist if num of gifs given
-     */
-    private fun sortAndSubList(
-        ks: KeywordSubtitles,
-        command: Mufy
-    ): List<Subtitle> {
-        return ks.subTitles.sortedBy { it.text.length }.let { sortedSubTitles ->
-            if (command.numOfGifs > 0) {
-                // num of gifs available
-                if (command.numOfGifs > sortedSubTitles.size) {
-                    // user ordered more than available
-                    _printer.value =
-                        "Requested number of gifs '${command.numOfGifs}' is higher than available gifs '${sortedSubTitles.size}'"
-                    sortedSubTitles
-                } else {
-                    sortedSubTitles.subList(0, command.numOfGifs)
-                }
-            } else {
-                sortedSubTitles
-            }
-        }
-    }
-
-    /**
-     * To get matched subtitles for given keyword
-     */
-    fun filterKeywordSubTitles(subTitleFile: File, keywords: Array<String>): List<KeywordSubtitles> {
-
-        val subTitles = SrtParser().parse(subTitleFile).subtitles
-        val keywordSubtitles = mutableListOf<KeywordSubtitles>()
-        // searching for each keyword
-        for (keyword in keywords) {
-
-
-            val matchedSubTitles = mutableListOf<Subtitle>()
-
-            for (subTitle in subTitles) {
-                if (isMatch(subTitle, keyword)) {
-                    matchedSubTitles.add(subTitle)
-                }
-            }
-
-            if (matchedSubTitles.isNotEmpty()) {
-                keywordSubtitles.add(KeywordSubtitles(keyword, matchedSubTitles))
-            }
-        }
-
-        return keywordSubtitles
-    }
-
-    private fun isMatch(subTitle: Subtitle, _keyword: String): Boolean {
-        val keyword = _keyword.toLowerCase()
-        val text = subTitle.text.toLowerCase().replace("\n", " ")
-
-        return text.matches("^(?:.+\\s)?($keyword)(?:\\s|\\W|.+)?\$".toRegex())
-    }
 
 }
