@@ -7,7 +7,6 @@ import com.theapache64.mufy.core.GifGenerator
 import com.theapache64.mufy.core.HtmlGenerator
 import com.theapache64.mufy.core.SortFilterManager
 import com.theapache64.mufy.core.TrimManager
-import com.theapache64.mufy.utils.srtparser.Subtitle
 import java.io.File
 import javax.inject.Inject
 

@@ -26,7 +26,7 @@ class MufyTest {
                 "-i",
                 "/home/theapache64/Documents/projects/mufy/lab/movie.mp4",
                 "-n",
-                "20",
+                "2",
                 "-k",
                 "What",
                 "-k",
@@ -42,7 +42,7 @@ class MufyTest {
                 "-i",
                 "/home/theapache64/Documents/projects/mufy/lab/movie.mp4",
                 "-n",
-                "20",
+                "2",
                 "-k",
                 "Thank you"
             )
@@ -56,7 +56,7 @@ class MufyTest {
                 "-i",
                 "/home/theapache64/Documents/projects/mufy/lab/movie.mp4",
                 "-n",
-                "20",
+                "2",
                 "-k",
                 "Every mischief, prank and dirty deed."
             )
@@ -70,7 +70,7 @@ class MufyTest {
                 "-i",
                 "/home/theapache64/Documents/projects/mufy/lab/movie.mp4",
                 "-n",
-                "20",
+                "2",
                 "-k",
                 "Every mischief,"
             )

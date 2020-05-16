@@ -1,6 +1,6 @@
 package com.theapache64.mufy.core
 
-import com.theapache64.mufy.utils.srtparser.SrtParser
+
 import com.theapache64.mufy.utils.srtparser.getResourceFile
 import com.winterbe.expekt.should
 import org.junit.Before
