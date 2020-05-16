@@ -22,7 +22,17 @@ class MufyTest {
     @Test
     fun `Generate gifs`() {
         val exitCode =
-            mufyCmd.execute("-i", "/home/theapache64/Documents/projects/mufy/lab/movie.mp4", "-k", "What", "-k", "Hey")
+            mufyCmd.execute(
+                "-i",
+                "/home/theapache64/Documents/projects/mufy/lab/movie.mp4",
+                "-n",
+                "10",
+                "-k",
+                "What",
+                "-k",
+                "Hey"
+            )
+        println(mufy.keyword.toList())
         exitCode.should.equal(MufyViewModel.RESULT_GIFS_GENERATED)
     }
 }

@@ -21,13 +21,13 @@ internal class MufyViewModelTest {
     @Test
     fun `Filter matched keywords`() {
         val srtFile = getResourceFile("movie.srt")
-        val keywords = arrayOf("what", "god", "fgdfgdfgdf")
+        val keywords = arrayOf("what", "god", "hey", "fgdfgdfgdf")
         val filtered = mufyViewModel.filterKeywordSubTitles(srtFile, keywords)
 
-        filtered.size.should.equal(2)
+        filtered.size.should.equal(3)
 
         filtered[0].keyword.should.equal("what")
-        filtered[0].subTitles.size.should.equal(115)
+        filtered[0].subTitles.size.should.equal(112)
 
         filtered[1].keyword.should.equal("god")
         filtered[1].subTitles.size.should.equal(2)

@@ -41,8 +41,9 @@ class MufyViewModel @Inject constructor() : BaseViewModel<Mufy>() {
                     val sortedSubtitles = sortAndSubList(ks, command)
                     val trimPositions = getTrimPositions(ks.keyword, sortedSubtitles)
                     createGifs(ks.keyword, inputFile, trimPositions)
-                    return RESULT_GIFS_GENERATED
                 }
+
+                return RESULT_GIFS_GENERATED
 
             } else {
                 // no match found found
@@ -153,7 +154,7 @@ class MufyViewModel @Inject constructor() : BaseViewModel<Mufy>() {
         return ks.subTitles.sortedBy { it.text.length }.let { sortedSubTitles ->
             if (command.numOfGifs > 0) {
                 // num of gifs available
-                if (sortedSubTitles.size > command.numOfGifs) {
+                if (command.numOfGifs > sortedSubTitles.size) {
                     // user ordered more than available
                     _printer.value =
                         "Requested number of gifs '${command.numOfGifs}' is higher than available gifs '${sortedSubTitles.size}'"
@@ -175,17 +176,14 @@ class MufyViewModel @Inject constructor() : BaseViewModel<Mufy>() {
         val subTitles = SrtParser().parse(subTitleFile).subtitles
         val keywordSubtitles = mutableListOf<KeywordSubtitles>()
         // searching for each keyword
-        for (_keyword in keywords) {
+        for (keyword in keywords) {
 
-            val keyword = _keyword.toLowerCase()
 
             val matchedSubTitles = mutableListOf<Subtitle>()
 
             for (subTitle in subTitles) {
-                if (subTitle.text.toLowerCase().contains(keyword)) {
-                    if (matchedSubTitles.size < 10) {
-                        matchedSubTitles.add(subTitle)
-                    }
+                if (isMatch(subTitle, keyword)) {
+                    matchedSubTitles.add(subTitle)
                 }
             }
 
@@ -195,6 +193,13 @@ class MufyViewModel @Inject constructor() : BaseViewModel<Mufy>() {
         }
 
         return keywordSubtitles
+    }
+
+    private fun isMatch(subTitle: Subtitle, _keyword: String): Boolean {
+        val keyword = _keyword.toLowerCase()
+        val text = subTitle.text.toLowerCase().replace("\n", " ")
+
+        return text.matches("^(?:.+\\s)?($keyword)(?:\\s|\\W|.+)?\$".toRegex())
     }
 
 }
