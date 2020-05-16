@@ -69,6 +69,34 @@
     "name": "Expekt",
     "description": "BDD assertion library for Kotlin"
    }
+  },
+  {
+   "id": 6,
+   "type": "implementation",
+   "installed_name": "coroutines",
+   "gpm_dep": {
+    "artifact_id": "kotlinx-coroutines-core",
+    "default_type": "implementation",
+    "docs": "https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core",
+    "get_from": "Central",
+    "group_id": "org.jetbrains.kotlinx",
+    "name": "Kotlinx Coroutines Core",
+    "description": "Coroutines support libraries for Kotlin"
+   }
+  },
+  {
+   "id": 7,
+   "type": "kapt",
+   "installed_name": "picocli",
+   "gpm_dep": {
+    "artifact_id": "picocli-codegen",
+    "default_type": "implementation",
+    "docs": "https://mvnrepository.com/artifact/info.picocli/picocli-codegen",
+    "get_from": "Central",
+    "group_id": "info.picocli",
+    "name": "Picocli Codegen",
+    "description": "Picocli Code Generation - Tools to generate documentation, configuration, source code and other files from a picocli model."
+   }
   }
  ]
 }

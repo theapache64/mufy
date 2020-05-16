@@ -13,7 +13,6 @@ class MufyTest {
     private lateinit var mufyCmd: CommandLine
     private val mufy = Mufy(true)
 
-
     @Before
     fun setUp() {
         this.mufyCmd = CommandLine(mufy)
@@ -22,7 +21,7 @@ class MufyTest {
 
     @Test
     fun `Generate gifs`() {
-        val exitCode = mufyCmd.execute("-i /home/theapache64/Documents/projects/mufy/lab/movie.mp4 -n 3 -k \"What\"")
-        exitCode.should.equal(Mufy.GIFS_GENERATED)
+        val exitCode = mufyCmd.execute("-i", "/home/theapache64/Documents/projects/mufy/lab/movie.mp4", "-k", "What")
+        exitCode.should.equal(MufyViewModel.RESULT_GIFS_GENERATED)
     }
 }
