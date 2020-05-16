@@ -20,7 +20,7 @@ class MufyViewModel @Inject constructor() : BaseViewModel<Mufy>() {
         const val RESULT_GIFS_GENERATED = 200
         const val RESULT_FAILED_TO_GENERATE_GIFS = 500
         const val NO_OF_GIF_MAXIMUM = -1
-        const val GIF_BUFFER = 1
+        const val GIF_BUFFER = 1.5
 
         val fontFile = File("assets/impact.ttf")
     }
@@ -57,6 +57,10 @@ class MufyViewModel @Inject constructor() : BaseViewModel<Mufy>() {
         return RESULT_FAILED_TO_GENERATE_GIFS;
     }
 
+    /**
+     * To generate gifs for the given input file with given trim position.
+     * The directory will be named according to keyword and input file name.
+     */
     private fun createGifs(keyword: String, inputFile: File, trimPositions: List<TrimPosition>) {
 
         val gifFilePaths = mutableListOf<String>()
@@ -70,13 +74,14 @@ class MufyViewModel @Inject constructor() : BaseViewModel<Mufy>() {
             val posIndex = index + 1
             println("Generating gif ${posIndex}/${trimPositions.size}...")
 
-            val gifFile = "${gifDir.absolutePath}/${posIndex}_${keyword}.gif"
+            val gifFilePath = "${gifDir.absolutePath}/${posIndex}_${keyword}.gif"
 
+            val tempMp4File = File("${keyword}_${posIndex}_${trimPositions.size}_${System.currentTimeMillis()}.mp4")
             val command = """
                 ffmpeg -y -ss ${trimPos.fromInSeconds} -t ${trimPos.durationInSeconds} -i '${inputFile.absolutePath}' -vf \
                 "scale=512:-1,
                 drawtext=fontfile=${fontFile.absolutePath}:fontsize=50:fontcolor=white:x=(w-text_w)/2:y=(h-text_h-10):text='${keyword.toUpperCase()}':bordercolor=black:borderw=2" \
-                -c:v libx264 -an cut.mp4 && ffmpeg -y -i cut.mp4 -filter_complex "[0:v] fps=12,scale=256:-1,split [a][b];[a] palettegen [p];[b][p] paletteuse" "$gifFile" && rm cut.mp4
+                -c:v libx264 -an "${tempMp4File.absolutePath}" && ffmpeg -y -i "${tempMp4File.absolutePath}" -filter_complex "[0:v] fps=12,scale=480:-1,split [a][b];[a] palettegen [p];[b][p] paletteuse" "$gifFilePath" && rm "${tempMp4File.absolutePath}" 
             """.trimIndent()
 
             SimpleCommandExecutor.executeCommand(
@@ -85,7 +90,7 @@ class MufyViewModel @Inject constructor() : BaseViewModel<Mufy>() {
                 isSuppressError = true,
                 isReturnAll = true
             )
-            gifFilePaths.add(gifFile)
+            gifFilePaths.add(gifFilePath)
         }
 
         createHtmlFileFor(gifDir, gifFilePaths)
@@ -131,7 +136,7 @@ class MufyViewModel @Inject constructor() : BaseViewModel<Mufy>() {
 
             val stWithoutBuffer = subTitle.begin.toSeconds() + seekMs
             val startTime = stWithoutBuffer - GIF_BUFFER
-            val endTime = stWithoutBuffer + totalTimeNeededForKeywordInMs + GIF_BUFFER
+            val endTime = stWithoutBuffer + totalTimeNeededForKeywordInMs
             trimPositions.add(TrimPosition(startTime, endTime))
         }
 
@@ -178,7 +183,9 @@ class MufyViewModel @Inject constructor() : BaseViewModel<Mufy>() {
 
             for (subTitle in subTitles) {
                 if (subTitle.text.toLowerCase().contains(keyword)) {
-                    matchedSubTitles.add(subTitle)
+                    if (matchedSubTitles.size < 10) {
+                        matchedSubTitles.add(subTitle)
+                    }
                 }
             }
 
@@ -186,6 +193,7 @@ class MufyViewModel @Inject constructor() : BaseViewModel<Mufy>() {
                 keywordSubtitles.add(KeywordSubtitles(keyword, matchedSubTitles))
             }
         }
+
         return keywordSubtitles
     }
 
