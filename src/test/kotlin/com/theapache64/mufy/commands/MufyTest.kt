@@ -20,7 +20,7 @@ class MufyTest {
     }
 
     @Test
-    fun `Generate gifs with word`() {
+    fun `Generate gifs with single words`() {
         val exitCode =
             mufyCmd.execute(
                 "-i",
@@ -36,7 +36,7 @@ class MufyTest {
     }
 
     @Test
-    fun `Generate gifs with 2 words`() {
+    fun `Generate gifs with 2 word`() {
         val exitCode =
             mufyCmd.execute(
                 "-i",
