@@ -13,6 +13,62 @@
     "name": "Picocli A Mighty Tiny Command Line Interface",
     "description": "Java command line parser with both an annotations API and a programmatic API. Usage help with ANSI styles and colors. Autocomplete. Nested subcommands. Easily included as source to avoid adding a dependency."
    }
+  },
+  {
+   "id": 2,
+   "type": "implementation",
+   "installed_name": "dagger",
+   "gpm_dep": {
+    "artifact_id": "dagger",
+    "default_type": "implementation",
+    "docs": "https://mvnrepository.com/artifact/com.google.dagger/dagger",
+    "get_from": "Central",
+    "group_id": "com.google.dagger",
+    "name": "Dagger",
+    "description": "A fast dependency injector for Android and Java."
+   }
+  },
+  {
+   "id": 3,
+   "type": "kapt",
+   "installed_name": "dagger-compiler",
+   "gpm_dep": {
+    "artifact_id": "dagger-compiler",
+    "default_type": "implementation",
+    "docs": "https://mvnrepository.com/artifact/com.google.dagger/dagger-compiler",
+    "get_from": "Central",
+    "group_id": "com.google.dagger",
+    "name": "Dagger Compiler",
+    "description": "A fast dependency injector for Android and Java."
+   }
+  },
+  {
+   "id": 4,
+   "type": "implementation",
+   "installed_name": "expekt",
+   "gpm_dep": {
+    "artifact_id": "expekt",
+    "default_type": "implementation",
+    "docs": "https://mvnrepository.com/artifact/com.winterbe/expekt",
+    "get_from": "Central",
+    "group_id": "com.winterbe",
+    "name": "Expekt",
+    "description": "BDD assertion library for Kotlin"
+   }
+  },
+  {
+   "id": 5,
+   "type": "testImplementation",
+   "installed_name": "expekt",
+   "gpm_dep": {
+    "artifact_id": "expekt",
+    "default_type": "implementation",
+    "docs": "https://mvnrepository.com/artifact/com.winterbe/expekt",
+    "get_from": "Central",
+    "group_id": "com.winterbe",
+    "name": "Expekt",
+    "description": "BDD assertion library for Kotlin"
+   }
   }
  ]
 }

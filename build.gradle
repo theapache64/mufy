@@ -3,6 +3,8 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.3.72'
 }
 
+apply plugin: 'kotlin-kapt'
+
 group 'com.theapache64.mufy'
 version 'v1.0.0-alpha01'
 
@@ -16,6 +18,17 @@ dependencies {
 
 	// Picocli A Mighty Tiny Command Line Interface: Java command line parser with both an annotations API and a programmatic API. Usage help with ANSI styles and colors. Autocomplete. Nested subcommands. Easily included as source to avoid adding a dependency.
 	implementation 'info.picocli:picocli:4.3.1'
+
+    implementation project(":cyclone-core")
+
+	// Dagger:A fast dependency injector for Android and Java.
+	implementation 'com.google.dagger:dagger:2.27'
+
+	// Dagger Compiler:A fast dependency injector for Android and Java.
+	kapt 'com.google.dagger:dagger-compiler:2.27'
+
+	// Expekt:BDD assertion library for Kotlin
+	testImplementation 'com.winterbe:expekt:0.5.0'
 }
 
 compileKotlin {
