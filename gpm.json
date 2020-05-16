@@ -1,0 +1,18 @@
+{
+ "added": [
+  {
+   "id": 1,
+   "type": "implementation",
+   "installed_name": "picocli",
+   "gpm_dep": {
+    "artifact_id": "picocli",
+    "default_type": "implementation",
+    "docs": "https://mvnrepository.com/artifact/info.picocli/picocli",
+    "get_from": "Central",
+    "group_id": "info.picocli",
+    "name": "Picocli A Mighty Tiny Command Line Interface",
+    "description": "Java command line parser with both an annotations API and a programmatic API. Usage help with ANSI styles and colors. Autocomplete. Nested subcommands. Easily included as source to avoid adding a dependency."
+   }
+  }
+ ]
+}
