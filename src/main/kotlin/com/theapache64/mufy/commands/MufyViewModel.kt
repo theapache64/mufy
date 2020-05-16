@@ -37,12 +37,12 @@ class MufyViewModel @Inject constructor(
          */
         const val IS_NEED_MP4 = true
 
-        val fontFile = File("assets/impact.ttf")
+        val fontFile = File("${JarUtils.getJarDir()}assets/impact.ttf")
     }
 
     override suspend fun call(command: Mufy): Int {
         val inputFile = command.input
-        val subTitleFile = File("${inputFile.parent}/${inputFile.nameWithoutExtension}.srt")
+        val subTitleFile = File("${inputFile.absoluteFile.parent}/${inputFile.nameWithoutExtension}.srt")
 
         // Keyword validation
         for (keyword in command.keyword) {
@@ -87,7 +87,9 @@ class MufyViewModel @Inject constructor(
                 inputFile,
                 trimPositions
             ) { gifDir: File, gifFilePaths: List<String> ->
-                htmlGenerator.createHtmlFileFor(gifDir, gifFilePaths)
+                val htmlFile = htmlGenerator.createHtmlFileFor(gifDir, gifFilePaths)
+                _printer.value = "Done!"
+                _printer.value = "Check out -> file://${htmlFile.absolutePath}"
             }
         }
 

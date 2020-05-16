@@ -11,7 +11,7 @@ class HtmlGenerator @Inject constructor() {
     /**
      * To create an HTML index page for the given gif files
      */
-    fun createHtmlFileFor(gifDir: File, gifFilePaths: List<String>) {
+    fun createHtmlFileFor(gifDir: File, gifFilePaths: List<String>): File {
 
         val imgSrcs = gifFilePaths.map { gifFilePath ->
             val tempFile = File(gifFilePath)
@@ -36,7 +36,9 @@ class HtmlGenerator @Inject constructor() {
             </html>
         """.trimIndent()
 
-        File("${gifDir.absolutePath}/index.html").writeText(html)
+        val file = File("${gifDir.absolutePath}/index.html")
+        file.writeText(html)
+        return file
     }
 
 }

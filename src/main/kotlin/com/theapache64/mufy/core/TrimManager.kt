@@ -7,7 +7,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class TrimManager @Inject constructor(){
+class TrimManager @Inject constructor() {
 
     /**
      * To get GIF trim positions from give subtitle and keyword
@@ -30,6 +30,7 @@ class TrimManager @Inject constructor(){
             val stWithoutBuffer = subTitle.begin.toSeconds() + seekMs
             val startTime = stWithoutBuffer - MufyViewModel.START_GIF_BUFFER
             val endTime = stWithoutBuffer + totalTimeNeededForKeywordInMs + MufyViewModel.END_GIF_BUFFER
+
             trimPositions.add(TrimPosition(startTime, endTime))
         }
 
