@@ -21,6 +21,8 @@ class MufyViewModel @Inject constructor() : BaseViewModel<Mufy>() {
         const val RESULT_FAILED_TO_GENERATE_GIFS = 500
         const val NO_OF_GIF_MAXIMUM = -1
         const val GIF_BUFFER = 1
+
+        val fontFile = File("assets/impact.ttf")
     }
 
     override suspend fun call(command: Mufy): Int {
@@ -39,6 +41,7 @@ class MufyViewModel @Inject constructor() : BaseViewModel<Mufy>() {
                     val sortedSubtitles = sortAndSubList(ks, command)
                     val trimPositions = getTrimPositions(ks.keyword, sortedSubtitles)
                     createGifs(ks.keyword, inputFile, trimPositions)
+                    return RESULT_GIFS_GENERATED
                 }
 
             } else {
@@ -56,20 +59,56 @@ class MufyViewModel @Inject constructor() : BaseViewModel<Mufy>() {
 
     private fun createGifs(keyword: String, inputFile: File, trimPositions: List<TrimPosition>) {
 
+        val gifFilePaths = mutableListOf<String>()
+        val gifDir = File("gifs/${keyword}_${inputFile.nameWithoutExtension}")
+
+        if (!gifDir.exists()) {
+            gifDir.mkdirs()
+        }
+
         for ((index, trimPos) in trimPositions.withIndex()) {
             val posIndex = index + 1
             println("Generating gif ${posIndex}/${trimPositions.size}...")
 
+            val gifFile = "${gifDir.absolutePath}/${posIndex}_${keyword}.gif"
+
             val command = """
                 ffmpeg -y -ss ${trimPos.fromInSeconds} -t ${trimPos.durationInSeconds} -i '${inputFile.absolutePath}' -vf \
                 "scale=512:-1,
-                drawtext=fontfile=impact.ttf:fontsize=50:fontcolor=white:x=(w-text_w)/2:y=(h-text_h-10):text='${keyword.toUpperCase()}':bordercolor=black:borderw=2" \
-                -c:v libx264 -an cut.mp4 && ffmpeg -y -i cut.mp4 -vf "scale=256:-1" "${posIndex}_${keyword}_${inputFile.nameWithoutExtension}.gif" && rm cut.mp4
+                drawtext=fontfile=${fontFile.absolutePath}:fontsize=50:fontcolor=white:x=(w-text_w)/2:y=(h-text_h-10):text='${keyword.toUpperCase()}':bordercolor=black:borderw=2" \
+                -c:v libx264 -an cut.mp4 && ffmpeg -y -i cut.mp4 -filter_complex "[0:v] fps=12,scale=256:-1,split [a][b];[a] palettegen [p];[b][p] paletteuse" "$gifFile" && rm cut.mp4
             """.trimIndent()
 
-            SimpleCommandExecutor.executeCommand(command)
-            break
+            SimpleCommandExecutor.executeCommand(
+                command,
+                isLivePrint = false,
+                isSuppressError = true,
+                isReturnAll = true
+            )
+            gifFilePaths.add(gifFile)
         }
+
+        createHtmlFileFor(gifDir, gifFilePaths)
+    }
+
+    /**
+     * To create an HTML index page for the given gif files
+     */
+    private fun createHtmlFileFor(gifDir: File, gifFileNames: List<String>) {
+
+        val imgSrcs = gifFileNames.map { gifFilePath ->
+            """<img src="$gifFilePath"/> </br> """
+        }
+
+        val html = """
+            <html>
+            <body>
+                $imgSrcs
+            </body>
+            </html>
+        """.trimIndent()
+
+        File("${gifDir.absolutePath}/index.html").writeText(html)
     }
 
     /**
