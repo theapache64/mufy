@@ -64,7 +64,7 @@ class MufyViewModel @Inject constructor(
 
         // Match validation
         if (keywordSubtitles.isEmpty()) {
-            _printer.value = "Given keywords (${command.keyword.toList()}) does not present in ${inputFile.name}"
+            _printer.value = "Given keywords ${command.keyword.toList()} does not present in ${inputFile.name}"
             return RESULT_FAILED_TO_GENERATE_GIFS
         }
 
@@ -89,7 +89,7 @@ class MufyViewModel @Inject constructor(
             ) { gifDir: File, gifFilePaths: List<String> ->
                 val htmlFile = htmlGenerator.createHtmlFileFor(gifDir, gifFilePaths)
                 _printer.value = "Done!"
-                _printer.value = "Check out -> file://${htmlFile.absolutePath}"
+                _printer.value = "Check out -> \"file://${htmlFile.absolutePath}\""
             }
         }
 
