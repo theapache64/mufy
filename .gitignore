@@ -140,3 +140,4 @@ SecretConstants.kt
 *.gif
 gifs
 !extras/what.gif
+!extras/output.gif

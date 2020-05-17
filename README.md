@@ -1,5 +1,7 @@
 # mufy 🎥
 
+![](extras/output.gif)
+
 A CLI tool to generate gifs from your favorite movie
 
 ## Install ⚙️
