@@ -9,5 +9,4 @@ data class TrimPosition(
     override fun toString(): String {
         return "TrimPosition(fromInSeconds=$fromInSeconds, toInSeconds=$toInSeconds, durationInSeconds=$durationInSeconds)"
     }
-
 }
