@@ -141,3 +141,4 @@ SecretConstants.kt
 gifs
 !extras/what.gif
 !extras/output.gif
+!libs/cyclone-core.jar

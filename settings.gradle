@@ -1,3 +1,3 @@
 rootProject.name = 'mufy'
-include 'cyclone-core'
-project(':cyclone-core').projectDir = new File('/home/theapache64/Documents/projects/cyclone/core')
+/*include 'cyclone-core'
+project(':cyclone-core').projectDir = new File('/home/theapache64/Documents/projects/cyclone/core')*/

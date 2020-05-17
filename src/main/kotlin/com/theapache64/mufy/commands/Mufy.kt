@@ -9,7 +9,7 @@ import javax.inject.Singleton
 
 @CommandLine.Command(
     name = "mufy",
-    version = ["v1.0.0-alpha04"],
+    version = ["v1.0.0-alpha05"],
     mixinStandardHelpOptions = true
 )
 @Singleton
