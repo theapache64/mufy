@@ -10,6 +10,7 @@ import com.theapache64.mufy.core.TrimManager
 import com.theapache64.mufy.utils.JarUtils
 import com.theapache64.mufy.utils.srtparser.SrtParser
 import java.io.File
+import java.net.URLEncoder
 import javax.inject.Inject
 
 class MufyViewModel @Inject constructor(
@@ -85,8 +86,6 @@ class MufyViewModel @Inject constructor(
         }
 
 
-
-
         // Keyword validation
         for (keyword in command.keywords) {
             if (keyword.length > MAX_KEYWORD_LENGTH) {
@@ -133,7 +132,11 @@ class MufyViewModel @Inject constructor(
             ) { gifDir: File, gifFilePaths: List<String> ->
                 val htmlFile = htmlGenerator.createHtmlFileFor(gifDir, gifFilePaths)
                 _printer.value = "Done!"
-                _printer.value = "Check out -> \"file://${htmlFile.absolutePath.replace(" ", "%20")}\""
+                val filePath = URLEncoder.encode(htmlFile.absolutePath, "UTF-8")
+                    .replace("%2F", "/")
+                    .replace("+", "%20")
+
+                _printer.value = "Check out -> \"file://$filePath\""
             }
         }
 
