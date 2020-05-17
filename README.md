@@ -14,6 +14,10 @@ Copy-paste below command into your terminal to install latest version
 wget "https://raw.githubusercontent.com/theapache64/mufy/master/install.sh" -q --show-progress -O install.sh && sh install.sh && source ~/.bashrc
 ```
 
+## Dependency :canoe:
+
+- ffmpeg
+
 ## Usage 💻
 
 ```shell script
