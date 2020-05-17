@@ -27,7 +27,7 @@ mufy -i movie.mp4 -n 10 -k "what?" -c "WHAT!!!"
 ## Examples :evergreen_tree:
 
 - To generate maximum GIFs from `movie.mp4`
-- 
+
 ```shell script
 ~$ mufy -i movie.mp4 -kfs
 ```
