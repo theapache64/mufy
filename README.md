@@ -1,6 +1,8 @@
 # mufy 🎥
 
-![](extras/output.gif)
+<a href="https://youtu.be/T_mH0nBAiE0">
+<img src="https://raw.githubusercontent.com/theapache64/mufy/master/extras/youtube.png"/>
+</a>
 
 A CLI tool to generate gifs from your favorite movie
 
