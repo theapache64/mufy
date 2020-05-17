@@ -128,7 +128,7 @@ function _picocli_mufy() {
   local prev_word=${COMP_WORDS[COMP_CWORD-1]}
 
   local commands=""
-  local flag_opts="-h --help -V --version"
+  local flag_opts="-kfs --keywords-from-subtitle -h --help -V --version"
   local arg_opts="-i --input -k --keyword -n --number-of-gifs -c --caption"
 
   compopt +o default
