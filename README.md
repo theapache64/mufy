@@ -33,14 +33,16 @@ mufy -i movie.mp4 -n 10 -k "what?" -c "WHAT!!!"
 - To generate **10** GIFs from `movie.mp4` with keyword `what`
 
 ```shell script
-~$ mufy -i movie.mp4 -n 10 -k "what"
+~$ mufy -i movie.mp4 -n 10 -k 'what'
 ```
 
 - To generate **10** GIFs from `movie.mp4` with keyword `what` and with caption `WHAT!!!`
 
 ```shell script
-~$ mufy -i movie.mp4 -n 10 -k "what" -c "WHAT!!!"
+~$ mufy -i movie.mp4 -n 10 -k 'what' -c 'WHAT!!!'
 ```
+
+
 
 
 `*optional` : Both options can't work together. Either one of the option must be given.
