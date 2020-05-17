@@ -21,6 +21,23 @@ wget "https://raw.githubusercontent.com/theapache64/mufy/master/install.sh" -q -
 ## Usage 💻
 
 ```shell script
+Usage: mufy [-hV] [-kfs] [-c=<caption>] -i=<input> [-n=<numOfGifs>]
+            [-k=<keywords>]...
+  -c, --caption=<caption>    Caption to be displayed on the GIF. By default,
+                               passed keyword will be displayed.
+  -h, --help                 Show this help message and exit.
+  -i, --input=<input>        Input file to be processed
+  -k, --keyword=<keywords>   Keywords (comma-separated)
+      -kfs, --keywords-from-subtitle
+                             If enabled, keywords will be collected from
+                               subtitles (all words)
+  -n, --number-of-gifs=<numOfGifs>
+                             Number of gifs to be generated.
+  -V, --version              Print version information and exit.
+```
+
+**Example**
+```shell script
 mufy -i movie.mp4 -n 10 -k "what?" -c "WHAT!!!"
 ```
 

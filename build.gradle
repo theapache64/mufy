@@ -36,15 +36,6 @@ dependencies {
 	// Picocli Codegen:Picocli Code Generation - Tools to generate documentation, configuration, source code and other files from a picocli model.
 	kapt 'info.picocli:picocli-codegen:4.3.1'
 
-	/*// Mockito Core:Mockito mock objects library core API and implementation
-	testImplementation 'org.mockito:mockito-core:3.3.3'
-
-	// Mockito Inline:Mockito preconfigured inline mock maker (intermediate and to be superseeded by automatic usage in a future version)
-	testImplementation 'org.mockito:mockito-inline:3.3.3'*/
-
-	// Mockito Kotlin:Using Mockito with Kotlin.
-	testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
-
 }
 
 compileKotlin {
