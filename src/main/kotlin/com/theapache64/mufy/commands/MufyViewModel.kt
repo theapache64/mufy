@@ -24,6 +24,9 @@ class MufyViewModel @Inject constructor(
     private val _printer = MutableLiveData<String>()
     val printer: LiveData<String> = _printer
 
+    private val _inlinePrinter = MutableLiveData<String>()
+    val inlinePrinter: LiveData<String> = _inlinePrinter
+
     companion object {
         const val RESULT_GIFS_GENERATED = 200
         const val RESULT_FAILED_TO_GENERATE_GIFS = 500
@@ -48,6 +51,12 @@ class MufyViewModel @Inject constructor(
     override suspend fun call(command: Mufy): Int {
         val inputFile = command.input
         val subTitleFile = File("${inputFile.absoluteFile.parent}/${inputFile.nameWithoutExtension}.srt")
+
+        // Input file validation
+        if (!inputFile.exists()) {
+            _printer.value = "File doesn't exist '${inputFile.absolutePath}'"
+            return RESULT_FAILED_TO_GENERATE_GIFS
+        }
 
         // Subtitle validation
         if (!subTitleFile.exists()) {
@@ -128,8 +137,12 @@ class MufyViewModel @Inject constructor(
                 ks.keyword,
                 inputFile,
                 trimPositions,
-                command.caption
+                command.caption,
+                { current: Int, total: Int ->
+                    _inlinePrinter.value = "Generating gif ${current}/${total}..."
+                }
             ) { gifDir: File, gifFilePaths: List<String> ->
+                // Gif generation completed
                 val htmlFile = htmlGenerator.createHtmlFileFor(gifDir, gifFilePaths)
                 _printer.value = "Done!"
                 val filePath = URLEncoder.encode(htmlFile.absolutePath, "UTF-8")

@@ -1,5 +1,6 @@
 package com.theapache64.mufy.core
 
+import com.theapache64.cyclone.core.livedata.MutableLiveData
 import com.theapache64.mufy.commands.MufyViewModel
 import com.theapache64.mufy.models.TrimPosition
 import com.theapache64.mufy.utils.SimpleCommandExecutor
@@ -19,6 +20,7 @@ class GifGenerator @Inject constructor() {
         inputFile: File,
         trimPositions: List<TrimPosition>,
         caption: String?,
+        onProgress: (current: Int, total: Int) -> Unit,
         onGifGenerated: (gifDir: File, gifFilePaths: List<String>) -> Unit
     ) {
 
@@ -30,7 +32,7 @@ class GifGenerator @Inject constructor() {
 
         for ((index, trimPos) in trimPositions.withIndex()) {
             val posIndex = index + 1
-            println("Generating gif ${posIndex}/${trimPositions.size}...")
+            onProgress(posIndex, trimPositions.size)
 
             val gifFilePathWithoutExt = "${gifDir.absolutePath}/${posIndex}_${keyword}"
             val gifFilePath = "$gifFilePathWithoutExt.gif"

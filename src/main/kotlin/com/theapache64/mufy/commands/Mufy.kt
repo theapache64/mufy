@@ -9,7 +9,7 @@ import javax.inject.Singleton
 
 @CommandLine.Command(
     name = "mufy",
-    version = ["v1.0.0-alpha03"],
+    version = ["v1.0.0-alpha04"],
     mixinStandardHelpOptions = true
 )
 @Singleton
@@ -59,6 +59,10 @@ class Mufy constructor(isFromTest: Boolean = false) : BaseCommand<Int>(isFromTes
 
         mufyViewModel.printer.observe {
             println(it)
+        }
+
+        mufyViewModel.inlinePrinter.observe { msg ->
+            print("\r${msg}")
         }
 
         mufyViewModel.call(this@Mufy)
