@@ -19,7 +19,7 @@ mufy -i movie.mp4 -n 10 -k "what?"
 - `-i` : Input file
 - `-k` : Keyword
 - `-n` : Number of gifs to be generated, default is `-1 (maximum)` (optional)
-- `-t` : Title to be displayed on the GIF. By default, passed keyword will be displayed.
+- `-c` : Caption to be displayed on the GIF. By default, passed keyword will be displayed.
 
 
 ## Author ✍️

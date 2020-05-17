@@ -25,12 +25,14 @@ class MufyViewModel @Inject constructor(
         const val RESULT_GIFS_GENERATED = 200
         const val RESULT_FAILED_TO_GENERATE_GIFS = 500
         const val RESULT_FAILED_LARGE_KEYWORD = 400
+        const val RESULT_FAILED_LARGE_CAPTION = 405
 
 
         const val NO_OF_GIF_MAXIMUM = -1
         const val START_GIF_BUFFER = 1.5
         const val END_GIF_BUFFER = 0.2
         const val MAX_KEYWORD_LENGTH = 21
+        const val MAX_CAPTION_LENGTH = MAX_KEYWORD_LENGTH
 
         /**
          * A flag to debug
@@ -47,9 +49,16 @@ class MufyViewModel @Inject constructor(
         // Keyword validation
         for (keyword in command.keyword) {
             if (keyword.length > MAX_KEYWORD_LENGTH) {
-                _printer.value = "$keyword crossed maximum keyword length $MAX_KEYWORD_LENGTH. Choose small keywords"
+                _printer.value = "'$keyword' crossed maximum keyword length $MAX_KEYWORD_LENGTH. Choose small keywords"
                 return RESULT_FAILED_LARGE_KEYWORD
             }
+        }
+
+        // Caption validation
+        if (command.caption != null && command.caption!!.length > MAX_CAPTION_LENGTH) {
+            _printer.value =
+                "'${command.caption}' crossed maximum caption length $MAX_CAPTION_LENGTH."
+            return RESULT_FAILED_LARGE_CAPTION
         }
 
         // Subtitle validation
@@ -85,7 +94,8 @@ class MufyViewModel @Inject constructor(
             gifGenerator.createGifs(
                 ks.keyword,
                 inputFile,
-                trimPositions
+                trimPositions,
+                command.caption
             ) { gifDir: File, gifFilePaths: List<String> ->
                 val htmlFile = htmlGenerator.createHtmlFileFor(gifDir, gifFilePaths)
                 _printer.value = "Done!"

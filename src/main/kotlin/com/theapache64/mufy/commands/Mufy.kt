@@ -32,9 +32,16 @@ class Mufy constructor(isFromTest: Boolean = false) : BaseCommand<Int>(isFromTes
 
     @CommandLine.Option(
         names = ["-n", "--number-of-gifs"],
+        description = ["Number of gifs to be generated."],
         defaultValue = MufyViewModel.NO_OF_GIF_MAXIMUM.toString()
     )
     var numOfGifs: Int = MufyViewModel.NO_OF_GIF_MAXIMUM
+
+    @CommandLine.Option(
+        names = ["-c", "--caption"],
+        description = ["Caption to be displayed on the GIF. By default, passed keyword will be displayed."]
+    )
+    var caption: String? = null
 
     @Inject
     lateinit var mufyViewModel: MufyViewModel
