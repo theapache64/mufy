@@ -8,6 +8,8 @@ import com.theapache64.mufy.core.HtmlGenerator
 import com.theapache64.mufy.core.SortFilterManager
 import com.theapache64.mufy.core.TrimManager
 import com.theapache64.mufy.utils.JarUtils
+import com.theapache64.mufy.utils.StringUtils
+import com.theapache64.mufy.utils.srtparser.SrtParser
 import java.io.File
 import javax.inject.Inject
 
@@ -15,7 +17,8 @@ class MufyViewModel @Inject constructor(
     private val gifGenerator: GifGenerator,
     private val htmlGenerator: HtmlGenerator,
     private val trimManager: TrimManager,
-    private val sortFilterManager: SortFilterManager
+    private val sortFilterManager: SortFilterManager,
+    private val srtParser: SrtParser
 ) : BaseViewModel<Mufy>() {
 
     private val _printer = MutableLiveData<String>()
@@ -46,8 +49,30 @@ class MufyViewModel @Inject constructor(
         val inputFile = command.input
         val subTitleFile = File("${inputFile.absoluteFile.parent}/${inputFile.nameWithoutExtension}.srt")
 
+        // Subtitle validation
+        if (!subTitleFile.exists()) {
+            // subtitle missing
+            _printer.value = "Subtitle file missing. Expected file : ${subTitleFile.absolutePath}"
+            return RESULT_FAILED_TO_GENERATE_GIFS
+        }
+
+        // Keyword empty check
+        if (command.keywords.isEmpty()) {
+
+            val subTitles = srtParser.parse(subTitleFile).subtitles
+            val keywords = mutableSetOf<String>()
+            // Parsing
+            for (subTitle in subTitles) {
+                val lineKeywords = StringUtils.filterWords(subTitle.text)
+                keywords.addAll(lineKeywords)
+            }
+
+            command.keywords = keywords.toTypedArray()
+        }
+
+
         // Keyword validation
-        for (keyword in command.keyword) {
+        for (keyword in command.keywords) {
             if (keyword.length > MAX_KEYWORD_LENGTH) {
                 _printer.value = "'$keyword' crossed maximum keyword length $MAX_KEYWORD_LENGTH. Choose small keywords"
                 return RESULT_FAILED_LARGE_KEYWORD
@@ -61,19 +86,12 @@ class MufyViewModel @Inject constructor(
             return RESULT_FAILED_LARGE_CAPTION
         }
 
-        // Subtitle validation
-        if (!subTitleFile.exists()) {
-            // subtitle missing
-            _printer.value = "Subtitle file missing. Expected file : ${subTitleFile.absolutePath}"
-            return RESULT_FAILED_TO_GENERATE_GIFS
-        }
-
         _printer.value = "Subtitle found : ${subTitleFile.name}"
-        val keywordSubtitles = sortFilterManager.filterKeywordSubTitles(subTitleFile, command.keyword)
+        val keywordSubtitles = sortFilterManager.filterKeywordSubTitles(subTitleFile, command.keywords)
 
         // Match validation
         if (keywordSubtitles.isEmpty()) {
-            _printer.value = "Given keywords ${command.keyword.toList()} does not present in ${inputFile.name}"
+            _printer.value = "Given keywords ${command.keywords.toList()} does not present in ${inputFile.name}"
             return RESULT_FAILED_TO_GENERATE_GIFS
         }
 
@@ -105,5 +123,6 @@ class MufyViewModel @Inject constructor(
 
         return RESULT_GIFS_GENERATED
     }
+
 
 }

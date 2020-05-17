@@ -25,10 +25,9 @@ class Mufy constructor(isFromTest: Boolean = false) : BaseCommand<Int>(isFromTes
 
     @CommandLine.Option(
         names = ["-k", "--keyword"],
-        required = true,
         description = ["Keywords (comma-separated)"]
     )
-    lateinit var keyword: Array<String>
+    var keywords: Array<String> = arrayOf()
 
     @CommandLine.Option(
         names = ["-n", "--number-of-gifs"],

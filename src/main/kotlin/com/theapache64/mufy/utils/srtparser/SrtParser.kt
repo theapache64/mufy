@@ -2,12 +2,13 @@ package com.theapache64.mufy.utils.srtparser
 
 import java.io.File
 import java.nio.charset.Charset
+import javax.inject.Inject
 
 class IllegalTimestampFormatException(override val message: String) : RuntimeException()
 
 class IllegalSrtFormatException(override val message: String) : RuntimeException()
 
-class SrtParser {
+class SrtParser @Inject constructor() {
 
     var subtitles = emptyList<Subtitle>()
         private set

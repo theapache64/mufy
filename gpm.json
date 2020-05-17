@@ -97,6 +97,48 @@
     "name": "Picocli Codegen",
     "description": "Picocli Code Generation - Tools to generate documentation, configuration, source code and other files from a picocli model."
    }
+  },
+  {
+   "id": 8,
+   "type": "testImplementation",
+   "installed_name": "mockito",
+   "gpm_dep": {
+    "artifact_id": "mockito-core",
+    "default_type": "implementation",
+    "docs": "https://mvnrepository.com/artifact/org.mockito/mockito-core",
+    "get_from": "Central",
+    "group_id": "org.mockito",
+    "name": "Mockito Core",
+    "description": "Mockito mock objects library core API and implementation"
+   }
+  },
+  {
+   "id": 9,
+   "type": "testImplementation",
+   "installed_name": "mockito",
+   "gpm_dep": {
+    "artifact_id": "mockito-inline",
+    "default_type": "implementation",
+    "docs": "https://mvnrepository.com/artifact/org.mockito/mockito-inline",
+    "get_from": "Central",
+    "group_id": "org.mockito",
+    "name": "Mockito Inline",
+    "description": "Mockito preconfigured inline mock maker (intermediate and to be superseeded by automatic usage in a future version)"
+   }
+  },
+  {
+   "id": 10,
+   "type": "testImplementation",
+   "installed_name": "nhaarman",
+   "gpm_dep": {
+    "artifact_id": "mockito-kotlin",
+    "default_type": "implementation",
+    "docs": "https://mvnrepository.com/artifact/com.nhaarman/mockito-kotlin",
+    "get_from": "Central",
+    "group_id": "com.nhaarman",
+    "name": "Mockito Kotlin",
+    "description": "Using Mockito with Kotlin."
+   }
   }
  ]
 }
