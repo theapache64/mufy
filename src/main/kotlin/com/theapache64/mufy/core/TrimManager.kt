@@ -9,6 +9,10 @@ import javax.inject.Singleton
 @Singleton
 class TrimManager @Inject constructor() {
 
+    companion object {
+        private const val MIN_GIF_DURATION_IN_SEC = 3
+    }
+
     /**
      * To get GIF trim positions from give subtitle and keyword
      */
@@ -33,8 +37,18 @@ class TrimManager @Inject constructor() {
             val seekMs = firstIndex * totalTimeNeededForKeywordInMs
 
             val stWithoutBuffer = subTitle.begin.toSeconds() + seekMs
-            val startTime = stWithoutBuffer - MufyViewModel.START_GIF_BUFFER
-            val endTime = stWithoutBuffer + totalTimeNeededForKeywordInMs + MufyViewModel.END_GIF_BUFFER
+            var startTime = stWithoutBuffer - MufyViewModel.START_GIF_BUFFER
+            var endTime = stWithoutBuffer + totalTimeNeededForKeywordInMs + MufyViewModel.END_GIF_BUFFER
+            val gifDuration = endTime - startTime
+            if (gifDuration < MIN_GIF_DURATION_IN_SEC) {
+                val remHalfDur = (MIN_GIF_DURATION_IN_SEC - gifDuration) / 2
+                startTime -= remHalfDur
+                endTime += remHalfDur
+            }
+            val newGifDuration = endTime - startTime
+            require(newGifDuration >= MIN_GIF_DURATION_IN_SEC) {
+                "Trimming algorithm failed. Min gif duration is '$MIN_GIF_DURATION_IN_SEC' seconds, but '$newGifDuration' found"
+            }
 
             trimPositions.add(TrimPosition(startTime, endTime))
         }

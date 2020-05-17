@@ -24,9 +24,25 @@ class MufyTest {
         val exitCode =
             mufyCmd.execute(
                 "-i",
-                "/home/theapache64/Documents/projects/mufy/lab/movie.mp4",
+                "/home/theapache64/Documents/projects/mufy/lab/klaus.mp4",
                 "-n",
                 "2",
+                "-k",
+                "What",
+                "-k",
+                "Hey"
+            )
+        exitCode.should.equal(MufyViewModel.RESULT_GIFS_GENERATED)
+    }
+
+    @Test
+    fun `Generate 20 gifs with single words`() {
+        val exitCode =
+            mufyCmd.execute(
+                "-i",
+                "/home/theapache64/Documents/projects/mufy/lab/klaus.mp4",
+                "-n",
+                "20",
                 "-k",
                 "What",
                 "-k",
@@ -40,7 +56,7 @@ class MufyTest {
         val exitCode =
             mufyCmd.execute(
                 "-i",
-                "/home/theapache64/Documents/projects/mufy/lab/movie.mp4",
+                "/home/theapache64/Documents/projects/mufy/lab/klaus.mp4",
                 "-n",
                 "2",
                 "-k",
@@ -54,7 +70,7 @@ class MufyTest {
         val exitCode =
             mufyCmd.execute(
                 "-i",
-                "/home/theapache64/Documents/projects/mufy/lab/movie.mp4",
+                "/home/theapache64/Documents/projects/mufy/lab/klaus.mp4",
                 "-n",
                 "2",
                 "-k",
@@ -68,7 +84,7 @@ class MufyTest {
         val exitCode =
             mufyCmd.execute(
                 "-i",
-                "/home/theapache64/Documents/projects/mufy/lab/movie.mp4",
+                "/home/theapache64/Documents/projects/mufy/lab/klaus.mp4",
                 "-n",
                 "2",
                 "-k",
@@ -82,7 +98,7 @@ class MufyTest {
         val exitCode =
             mufyCmd.execute(
                 "-i",
-                "/home/theapache64/Documents/projects/mufy/lab/movie.mp4",
+                "/home/theapache64/Documents/projects/mufy/lab/klaus.mp4",
                 "-n",
                 "10",
                 "-k",
