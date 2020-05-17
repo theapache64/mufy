@@ -20,7 +20,7 @@ wget "https://raw.githubusercontent.com/theapache64/mufy/master/install.sh" -q -
 
 ## Usage 💻
 
-```shell script
+```
 Usage: mufy [-hV] [-kfs] [-c=<caption>] -i=<input> [-n=<numOfGifs>]
             [-k=<keywords>]...
   -c, --caption=<caption>    Caption to be displayed on the GIF. By default,
