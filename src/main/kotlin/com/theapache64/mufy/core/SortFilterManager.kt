@@ -1,6 +1,7 @@
 package com.theapache64.mufy.core
 
 import com.theapache64.mufy.commands.Mufy
+import com.theapache64.mufy.commands.MufyViewModel
 import com.theapache64.mufy.models.KeywordSubtitles
 import com.theapache64.mufy.utils.srtparser.SrtParser
 import com.theapache64.mufy.utils.srtparser.Subtitle
@@ -67,6 +68,19 @@ class SortFilterManager @Inject constructor() {
         val text = subTitle.text.toLowerCase().replace("\n", " ")
 
         return text.matches("^(?:.+\\s)?($keyword)(?:\\s|\\W|.+)?\$".toRegex())
+    }
+
+    private val specCharRegEx by lazy { "\\W+".toRegex() }
+
+    fun filterWords(
+        text: String
+    ): Set<String> {
+
+        return text.replace(specCharRegEx, " ")
+            .split(" ")
+            .map { it.trim().toLowerCase() }
+            .filter { it.length > 1 && it.length <= MufyViewModel.MAX_KEYWORD_LENGTH }
+            .toSet()
     }
 
 }

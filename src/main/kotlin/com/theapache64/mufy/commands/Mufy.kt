@@ -9,7 +9,7 @@ import javax.inject.Singleton
 
 @CommandLine.Command(
     name = "mufy",
-    version = ["v1.0.0-alpha01"],
+    version = ["v1.0.0-alpha03"],
     mixinStandardHelpOptions = true
 )
 @Singleton
@@ -41,6 +41,12 @@ class Mufy constructor(isFromTest: Boolean = false) : BaseCommand<Int>(isFromTes
         description = ["Caption to be displayed on the GIF. By default, passed keyword will be displayed."]
     )
     var caption: String? = null
+
+    @CommandLine.Option(
+        names = ["-kfs", "--keywords-from-subtitle"],
+        description = ["If enabled, keywords will be collected from subtitles (all words)"]
+    )
+    var isKeywordFromSubtitle: Boolean = false
 
     @Inject
     lateinit var mufyViewModel: MufyViewModel
