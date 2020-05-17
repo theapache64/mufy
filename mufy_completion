@@ -129,7 +129,7 @@ function _picocli_mufy() {
 
   local commands=""
   local flag_opts="-h --help -V --version"
-  local arg_opts="-i --input -k --keyword -n --number-of-gifs"
+  local arg_opts="-i --input -k --keyword -n --number-of-gifs -c --caption"
 
   compopt +o default
 
@@ -143,6 +143,9 @@ function _picocli_mufy() {
       return
       ;;
     -n|--number-of-gifs)
+      return
+      ;;
+    -c|--caption)
       return
       ;;
   esac
