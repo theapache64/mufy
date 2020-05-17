@@ -139,3 +139,4 @@ SecretConstants.kt
 *.mp4
 *.gif
 gifs
+!extras/what.gif

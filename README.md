@@ -22,6 +22,8 @@ mufy -i movie.mp4 -n 10 -k "what?" -c "WHAT!!!"
 - `-c` : Caption to be displayed on the GIF. By default, matched keyword will be displayed.
 - `-kfs` : To get **k**eywords **f**rom **s**ubtitle. (*optional)
 
+`*optional` : Both options can't work together. Either one of the option must be given.
+
 ## Examples :evergreen_tree:
 
 - To generate maximum GIFs from `movie.mp4`
@@ -42,10 +44,10 @@ mufy -i movie.mp4 -n 10 -k "what?" -c "WHAT!!!"
 ~$ mufy -i movie.mp4 -n 10 -k 'what' -c 'WHAT!!!'
 ```
 
+A sample from output
 
+![](extras/what.gif)
 
-
-`*optional` : Both options can't work together. Either one of the option must be given.
 
 ## Author ✍️
 

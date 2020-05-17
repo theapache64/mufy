@@ -25,11 +25,12 @@ class TrimManager @Inject constructor() {
             val timeForChar = durInSec / charCount
             val totalTimeNeededForKeywordInMs = keyword.length * timeForChar
             val firstIndex = subTitle.text.indexOf(keyword, 0, true)
-            val seekMs = if (firstIndex > 0) {
+            /*val seekMs = if (firstIndex > 0) {
                 (firstIndex - 1) * totalTimeNeededForKeywordInMs
             } else {
                 totalTimeNeededForKeywordInMs
-            }
+            }*/
+            val seekMs = firstIndex * totalTimeNeededForKeywordInMs
 
             val stWithoutBuffer = subTitle.begin.toSeconds() + seekMs
             val startTime = stWithoutBuffer - MufyViewModel.START_GIF_BUFFER

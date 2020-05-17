@@ -76,4 +76,20 @@ class MufyTest {
             )
         exitCode.should.equal(MufyViewModel.RESULT_GIFS_GENERATED)
     }
+
+    @Test
+    fun `Generate gifs with what caption`() {
+        val exitCode =
+            mufyCmd.execute(
+                "-i",
+                "/home/theapache64/Documents/projects/mufy/lab/movie.mp4",
+                "-n",
+                "10",
+                "-k",
+                "what",
+                "-c",
+                "What!!!"
+            )
+        exitCode.should.equal(MufyViewModel.RESULT_GIFS_GENERATED)
+    }
 }

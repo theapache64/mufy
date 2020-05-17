@@ -43,7 +43,7 @@ class MufyViewModel @Inject constructor(
         /**
          * A flag to debug
          */
-        const val IS_NEED_MP4 = false
+        const val IS_NEED_MP4 = true
 
         val fontFile = File("${JarUtils.getJarDir()}assets/impact.ttf")
     }
