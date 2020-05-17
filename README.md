@@ -28,11 +28,8 @@ Usage: mufy [-hV] [-kfs] [-c=<caption>] -i=<input> [-n=<numOfGifs>]
   -h, --help                 Show this help message and exit.
   -i, --input=<input>        Input file to be processed
   -k, --keyword=<keywords>   Keywords (comma-separated)
-      -kfs, --keywords-from-subtitle
-                             If enabled, keywords will be collected from
-                               subtitles (all words)
-  -n, --number-of-gifs=<numOfGifs>
-                             Number of gifs to be generated.
+  -kfs, --keywords-from-subtitle  If enabled, keywords will be collected from  subtitles (all words)
+  -n, --number-of-gifs=<numOfGifs> Number of gifs to be generated.
   -V, --version              Print version information and exit.
 ```
 
