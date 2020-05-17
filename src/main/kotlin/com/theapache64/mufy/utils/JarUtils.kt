@@ -1,3 +1,5 @@
+package com.theapache64.mufy.utils
+
 import com.theapache64.mufy.Main
 import java.io.File
 
