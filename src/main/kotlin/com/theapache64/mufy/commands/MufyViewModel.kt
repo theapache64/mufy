@@ -35,7 +35,7 @@ class MufyViewModel @Inject constructor(
         /**
          * A flag to debug
          */
-        const val IS_NEED_MP4 = false
+        const val IS_NEED_MP4 = true
 
         val fontFile = File("${JarUtils.getJarDir()}assets/impact.ttf")
     }
@@ -89,7 +89,7 @@ class MufyViewModel @Inject constructor(
             ) { gifDir: File, gifFilePaths: List<String> ->
                 val htmlFile = htmlGenerator.createHtmlFileFor(gifDir, gifFilePaths)
                 _printer.value = "Done!"
-                _printer.value = "Check out -> \"file://${htmlFile.absolutePath}\""
+                _printer.value = "Check out -> \"file://${htmlFile.absolutePath.replace(" ", "%20")}\""
             }
         }
 
