@@ -1,6 +1,6 @@
 # mufy 🎥
 
-<a href="https://youtu.be/T_mH0nBAiE0">
+<a href="https://youtu.be/T_mH0nBAiE0" target="_blank">
 <img src="https://raw.githubusercontent.com/theapache64/mufy/master/extras/youtube.png"/>
 </a>
 
