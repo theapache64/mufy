@@ -44,7 +44,7 @@ mufy -i movie.mp4 -n 10 -k "what?" -c "WHAT!!!"
 ~$ mufy -i movie.mp4 -n 10 -k 'what' -c 'WHAT!!!'
 ```
 
-A sample from output
+A sample output
 
 ![](extras/what.gif)
 
